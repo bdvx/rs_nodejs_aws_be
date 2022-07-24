@@ -15,7 +15,7 @@
     "/products": {
       "get": {
         "summary": "Get a list of all audio products",
-        "description": "Hardcoded backend values",
+        "description": "DB values",
         "responses": {
           "200": {
             "description": "successful operation",
@@ -32,6 +32,76 @@
           },
           "400": {
             "description": "Invalid status value"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create audio product",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Product Title",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Products"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong parameters provided"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -39,7 +109,7 @@
     "/products/{productId}": {
       "get": {
         "summary": "Finds Product by id",
-        "description": "Takes one product from hardcoded /products value",
+        "description": "Takes one product from DB /products value",
         "parameters": [
           {
             "name": "productId",
@@ -69,6 +139,9 @@
           },
           "400": {
             "description": "Invalid id"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -101,6 +174,7 @@
           "image": {
             "type": "string",
             "description": "URL of image in jpeg format"
+            "description": "Image in base64 format"
           }
         }
       },
