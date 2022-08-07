@@ -174,7 +174,6 @@
           "image": {
             "type": "string",
             "description": "URL of image in jpeg format"
-            "description": "Image in base64 format"
           }
         }
       },

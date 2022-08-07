@@ -1,0 +1,41 @@
+{
+  "name": "import-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bdvx/rs-app-aws-be.git"
+  },
+  "keywords": [
+    "import-service"
+  ],
+  "author": "bdvx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bdvx/rs-app-aws-be/issues"
+  },
+  "homepage": "https://github.com/bdvx/rs-app-aws-be#readme",
+  "devDependencies": {
+    "aws-sdk-mock": "^5.1.0",
+    "csv-parser": "^2.3.3",
+    "jest": "^26.6.3",
+    "serverless-dotenv-plugin": "^3.1.0",
+    "webpack": "^5.4.0",
+    "webpack-node-externals": "^2.5.2",
+    "aws-sdk": "^2.792.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.792.0",
+    "serverless-webpack": "^5.3.5",
+    "aws-sdk-mock": "^5.1.0",
+    "csv-parser": "^2.3.3",
+    "jest": "^26.6.3",
+    "serverless-dotenv-plugin": "^3.1.0",
+    "webpack": "^5.4.0",
+    "webpack-node-externals": "^2.5.2"
+  }
+}
