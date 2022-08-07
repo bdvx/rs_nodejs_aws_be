@@ -8,6 +8,7 @@ export const importFileParser = async (event) => {
     
     try {
         const s3 = new AWS.S3({region, signatureVersion: 'v4'});
+        const sqs = new AWS.SQS({ region });
         const csv = require('csv-parser');
         for( const record of (event.Records || []) ){
 
@@ -19,7 +20,19 @@ export const importFileParser = async (event) => {
 
             await new Promise((resolve, reject) =>{
             s3Stream.pipe(csv())
-                .on('data', (data) => { console.log('CSV DATA:', data); })
+                .on('data', (data) => { 
+                    console.log('CSV DATA:', data);
+                    sqs.sendMessage({
+                        QueueUrl: process.env.SQS_URL,
+                        MessageBody: JSON.stringify(data)
+                    }, error => {
+                        if (error) {
+                            console.log('importFileParser SQS queue failed:', error);
+                            return;
+                        }
+                        console.log('SQS message has been sent');
+                    });
+                })
                 .on('error', (error) => { 
                     console.log('importFileParser parse error:', error);
                     reject();

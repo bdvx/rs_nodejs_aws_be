@@ -13,11 +13,10 @@ provider:
   stage: dev
   region: eu-west-1
 
-plugins:
-  - serverless-webpack
-  - serverless-dotenv-plugin
+  environment:
+    SQS_URL: "${env:SQS_URL}"
 
-iamRoleStatements:
+  iamRoleStatements:
     - Effect: "Allow"
       Action: "s3:ListBucket"
       Resource: 
@@ -27,7 +26,15 @@ iamRoleStatements:
         - "s3:*"
       Resource: 
         - "arn:aws:s3:::${env:BUCKET}/*"
+    - Effect: "Allow"
+      Action: "sqs:*"
+      Resource: "${env:SQS_ARN}"
 
+plugins:
+  - serverless-webpack
+  - serverless-dotenv-plugin
+
+  
 functions:
   importProductsFile:
     handler: handler.importProductsFile 
@@ -44,7 +51,7 @@ functions:
     handler: handler.importFileParser 
     events:
       - s3:
-          bucket: '${env:BUCKET}'
+          bucket: "${env:BUCKET}"
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploaded/
