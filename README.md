@@ -1,6 +1,6 @@
 # rs-app-aws-be
 
-Endpoints (with 2 seconds delay for async interaction): 
+Endpoints: 
 
 [getProductsList](https://755vvfmegj.execute-api.eu-west-1.amazonaws.com/dev/products) (GET)
 

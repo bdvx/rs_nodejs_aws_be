@@ -6,6 +6,28 @@ provider:
   stage: dev
   region: eu-west-1
 
+  # Variables
+  environment:
+    PG_HOST: '${env:PG_HOST}'
+    PG_PORT: '${env:PG_PORT}'
+    PG_DATABASE: '${env:PG_DATABASE}'
+    PG_USERNAME: '${env:PG_USERNAME}'
+    PG_PASSWORD: '${env:PG_PASSWORD}'
+    SQS_URL:
+      Ref: SQSQueue
+    SNS_ARN:
+      Ref: SNSTopic
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "sqs:*"
+      Resource: 
+        - Fn::GetAtt: [ SQSQueue, Arn ]
+    - Effect: "Allow"
+      Action: "sns:*"
+      Resource: 
+        Ref: SNSTopic
+
 plugins:
   - serverless-webpack
   - serverless-dotenv-plugin
@@ -15,13 +37,42 @@ custom:
     webpackConfig: 'webpack.config.js'
     includeModules: true
 
-# DB Variables
-  environment:
-    PG_HOST: '${env:PG_HOST}'
-    PG_PORT: '${env:PG_PORT}'
-    PG_DATABASE: '${env:PG_DATABASE}'
-    PG_USERNAME: '${env:PG_USERNAME}'
-    PG_PASSWORD: '${env:PG_PASSWORD}'
+
+
+resources:
+  Resources:
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: '${env:EMAIL}'
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic  
+        FilterPolicy:
+          price: 
+            - numeric:
+              - ">"
+              - 15000
+    SNSSideSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: '${env:SIDEEMAIL}'
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic  
+        FilterPolicy:
+          price: 
+            - numeric:
+              - "<"
+              - 15000
 
 
 functions:
@@ -52,3 +103,13 @@ functions:
           path: products
           method: post
           cors: true
+  
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt: 
+              - SQSQueue
+              - Arn
