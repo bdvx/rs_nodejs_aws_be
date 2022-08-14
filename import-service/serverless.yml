@@ -47,6 +47,16 @@ functions:
             parameters: 
               querystrings: 
                 name: true
+          response:
+            headers:
+              Access-Control-Allow-Origin: '*'
+              Access-Control-Allow-Credentials: true
+          authorizer:
+            name: tokenAuthorizer
+            arn: ${cf:authorization-service-dev.basicAuthorizerArn}
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: token
   importFileParser:
     handler: handler.importFileParser 
     events:
@@ -56,4 +66,16 @@ functions:
           rules:
             - prefix: uploaded/
           existing: true
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
 
