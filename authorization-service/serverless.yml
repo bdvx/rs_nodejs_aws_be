@@ -1,0 +1,36 @@
+ 
+service: authorization-service
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  plugins:
+    - serverless-webpack
+    - serverless-dotenv-plugin
+
+
+custom:
+  region: eu-west-1
+  dotenv:
+    exclude:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+plugins:
+  - serverless-plugin-webpack
+  - serverless-dotenv-plugin
+
+functions:
+  basicAuthorizer:
+    handler: handler.basicAuthorizer
+
+resources:
+  Outputs:
+    basicAuthorizerArn:
+      Value: 
+        Fn::GetAtt:
+          - BasicAuthorizerLambdaFunction
+          - Arn 
