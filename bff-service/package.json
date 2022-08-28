@@ -1,0 +1,20 @@
+{
+  "name": "bff-service",
+  "version": "1.0.0",
+  "description": "backend-for-frontend service(API Gateway pattern)",
+  "main": "index.js",
+  "scripts": {
+    "eb:init": "eb init --platform node.js --region eu-west-1",
+    "eb:create": "eb create development --single --cname bdvx-bff-api-dev",
+    "eb:deploy": "eb deploy",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bdvx",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
